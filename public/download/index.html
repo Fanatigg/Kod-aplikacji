@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SumaKamera v2.1 - Pobierz aplikację i Skaner Online</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      background: #0b132b;
+      color: #f1f5f9;
+      padding: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container {
+      max-width: 540px;
+      margin: 0 auto;
+    }
+    .header {
+      text-align: center;
+      padding: 16px 0 12px;
+    }
+    .logo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #1e3a8a;
+      color: #93c5fd;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    h1 {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+    .subtitle {
+      font-size: 14px;
+      color: #94a3b8;
+    }
+
+    /* Main Tab Switcher */
+    .nav-tabs {
+      display: flex;
+      background: #1e293b;
+      padding: 4px;
+      border-radius: 14px;
+      margin: 18px 0;
+      gap: 4px;
+      border: 1px solid #334155;
+    }
+    .nav-tab {
+      flex: 1;
+      text-align: center;
+      padding: 10px 8px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #94a3b8;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      background: transparent;
+    }
+    .nav-tab.active {
+      background: #0284c7;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
+    }
+
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Version Cards */
+    .version-card {
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border-radius: 20px;
+      padding: 20px 18px;
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .version-card.v21 {
+      border: 2px solid #10b981;
+      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.25);
+    }
+    .version-card.v20 {
+      border: 1px solid #0284c7;
+      opacity: 0.95;
+    }
+    .version-card.v1 {
+      border: 1px solid #334155;
+      opacity: 0.85;
+    }
+    .version-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+    .tag-v21 {
+      background: #065f46;
+      color: #6ee7b7;
+      border: 1px solid #10b981;
+    }
+    .tag-v20 {
+      background: #0c4a6e;
+      color: #7dd3fc;
+    }
+    .tag-v1 {
+      background: #334155;
+      color: #cbd5e1;
+    }
+    .version-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+    .version-desc {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-bottom: 12px;
+    }
+    .features-list {
+      list-style: none;
+      margin-bottom: 16px;
+      font-size: 12.5px;
+      color: #e2e8f0;
+      text-align: left;
+      background: rgba(15, 23, 42, 0.6);
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .features-list li {
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .features-list li:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Buttons */
+    .btn-download-primary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: #10b981;
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 15.5px;
+      padding: 15px 18px;
+      border-radius: 14px;
+      text-decoration: none;
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+      transition: transform 0.1s, background 0.2s;
+    }
+    .btn-download-primary:active {
+      transform: scale(0.98);
+      background: #059669;
+    }
+
+    .btn-download-secondary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #334155;
+      color: #f1f5f9;
+      font-weight: 700;
+      font-size: 14.5px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn-download-secondary:hover {
+      background: #475569;
+    }
+
+    .zip-link {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 12.5px;
+      color: #93c5fd;
+      text-decoration: underline;
+    }
+
+    /* Info Tip & Steps */
+    .tip-box {
+      margin: 16px 0;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 13px;
+      color: #bae6fd;
+      text-align: left;
+    }
+    .steps-box {
+      background: #1e293b;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 24px;
+      font-size: 13px;
+    }
+    .steps-title {
+      font-weight: 700;
+      font-size: 14.5px;
+      margin-bottom: 12px;
+      color: #38bdf8;
+    }
+    .step-item {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 10px;
+      align-items: flex-start;
+    }
+    .step-num {
+      background: #334155;
+      color: #e2e8f0;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+
+    /* Web Scanner Section */
+    .scanner-box {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 20px;
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+    .scanner-hero {
+      background: linear-gradient(135deg, #0c4a6e, #1e3a8a);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 16px;
+      border: 1px solid #38bdf8;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .scanner-hero-icon {
+      font-size: 32px;
+      line-height: 1;
+    }
+    .scanner-hero-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 2px;
+    }
+    .scanner-hero-desc {
+      font-size: 12px;
+      color: #bae6fd;
+    }
+
+    .scanner-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .btn-action {
+      background: #0284c7;
+      color: white;
+      border: none;
+      padding: 14px 10px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 13.5px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+    .btn-action:hover {
+      background: #0369a1;
+    }
+    .btn-action.camera-btn {
+      background: #10b981;
+    }
+    .btn-action.camera-btn:hover {
+      background: #059669;
+    }
+
+    #fileInput {
+      display: none;
+    }
+
+    .video-container {
+      display: none;
+      position: relative;
+      background: #000;
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    video {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      display: block;
+    }
+    .video-overlay-btn {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #2563eb;
+      color: white;
+      font-weight: 800;
+      font-size: 13px;
+      padding: 10px 20px;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+    }
+
+    .preview-canvas-box {
+      display: none;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+    canvas#previewCanvas {
+      max-width: 100%;
+      max-height: 220px;
+      border-radius: 10px;
+      border: 1px solid #475569;
+    }
+
+    .ocr-status {
+      display: none;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid #38bdf8;
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 12px;
+      color: #38bdf8;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    /* Items detected pill list */
+    .detected-items-box {
+      margin-top: 14px;
+      background: #0f172a;
+      border-radius: 14px;
+      padding: 14px;
+      border: 1px solid #334155;
+    }
+    .items-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #94a3b8;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .pills-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+      min-height: 38px;
+    }
+    .ocr-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: none;
+    }
+    .ocr-pill.active {
+      background: #10b981;
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);
+    }
+    .ocr-pill.inactive {
+      background: #334155;
+      color: #94a3b8;
+      text-decoration: line-through;
+    }
+
+    /* Live Calculator Display */
+    .calc-bar {
+      background: #0f172a;
+      border-radius: 16px;
+      padding: 16px;
+      border: 1px solid #38bdf8;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+    .calc-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .sum-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #94a3b8;
+      letter-spacing: 0.5px;
+    }
+    .sum-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 24px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+    .nine-percent-box {
+      margin-top: 12px;
+      padding: 12px 14px;
+      background: #064e3b;
+      border: 1px solid #34d399;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .nine-percent-box:hover {
+      background: #065f46;
+    }
+    .nine-label {
+      font-size: 10px;
+      font-weight: 800;
+      color: #6ee7b7;
+      letter-spacing: 0.5px;
+    }
+    .nine-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 20px;
+      font-weight: 800;
+      color: #34d399;
+    }
+    .btn-copy {
+      background: rgba(52, 211, 153, 0.2);
+      border: 1px solid #34d399;
+      color: #6ee7b7;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 6px 10px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #10b981;
+      color: white;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 10px 20px;
+      border-radius: 20px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+      display: none;
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo-badge">📸 SumaKamera v2.1 • ZUS & Kwoty</div>
+      <h1>Licznik Składek ZUS & Kwot</h1>
+      <p class="subtitle">Wybierz aplikację na Androida lub uruchom skaner bezpośrednio w przeglądarce</p>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="switchTab('download')">📥 Pobierz APK (Android)</button>
+      <button class="nav-tab" onclick="switchTab('webscanner')">🌐 Skaner Online (iPhone / Xiaomi)</button>
+    </div>
+
+    <!-- TAB 1: DOWNLOAD APK -->
+    <div id="tab-download" class="tab-content active">
+      <!-- WERSJA 2.1 (NAJNOWSZA) -->
+      <div class="version-card v21">
+        <span class="version-tag tag-v21">Najnowsza • Wersja 2.1</span>
+        <h2 class="version-title">SumaKamera v2.1</h2>
+        <p class="version-desc">Aktualizacja o obsługę kwot z 1 miejscem po przecinku oraz tryb poziomy</p>
+
+        <ul class="features-list">
+          <li>🎯 <b>Liczby z 1 miejscem po przecinku</b> – np. <code>750,5 zł</code> / <code>750,5 złotych</code> liczy jako 750,50 zł!</li>
+          <li>🔄 <b>Adaptacyjny tryb poziomy (Landscape)</b> – po obróceniu smartfona kamera jest w 100% widoczna, a suma i sterowanie lądują w bocznym doku pod kciukiem</li>
+          <li>💾 <b>Szybki przycisk „Zapisz”</b> na górnym pasku w trybie zamrożenia</li>
+          <li>✨ <b>Czysty ekran</b> – usunięto dymek instrukcji zasłaniający nagłówki dokumentu</li>
+          <li>📏 <b>Auto-skalowanie dużych sum</b> – kwoty powyżej 7 cyfr mieszczą się idealnie</li>
+          <li>📋 <b>Poprawka przycisku „Pozycje”</b> – pełna widoczność dwucyfrowych liczb pozycji</li>
+        </ul>
+
+        <a href="/download/SumaKamera_v2.1.apk" download="SumaKamera_v2.1.apk" class="btn-download-primary">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Pobierz SumaKamera v2.1 (APK)
+        </a>
+
+        <div style="margin-top: 8px;">
+          <a href="/download/SumaKamera_v2.1.zip" download="SumaKamera_v2.1.zip" class="zip-link">
+            Alternatywnie: Pobierz jako archiwum .ZIP (25 MB)
+          </a>
+        </div>
+      </div>
+
+      <!-- WERSJA 2.0 -->
+      <div class="version-card v20">
+        <span class="version-tag tag-v20">Wersja 2.0</span>
+        <h2 class="version-title">SumaKamera v2.0</h2>
+        <p class="version-desc">Wersja z przyciskiem Zapisz i skalowaniem czcionki</p>
+
+        <a href="/download/SumaKamera_v2.apk" download="SumaKamera_v2.apk" class="btn-download-secondary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Pobierz v2.0 (APK)
+        </a>
+      </div>
+
+      <!-- WERSJA 1.0 (STABILNA) -->
+      <div class="version-card v1">
+        <span class="version-tag tag-v1">Wersja Poprzednia</span>
+        <h2 class="version-title">SumaKamera v1.0 (Oryginał)</h2>
+        <p class="version-desc">Oryginalna, sprawdzona wersja bazowa</p>
+
+        <a href="/download/SumaKamera.apk" download="SumaKamera.apk" class="btn-download-secondary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Pobierz v1.0 (Oryginał)
+        </a>
+      </div>
+
+      <!-- Wskazówka dotycząca instalacji -->
+      <div class="tip-box">
+        💡 <b>Wskazówka przy aktualizacji:</b> Jeśli masz już na telefonie poprzednią wersję, zalecamy ją <b>najpierw odinstalować</b> (przytrzymaj ikonę SumaKamera &rarr; <i>Odinstaluj</i>), a dopiero potem kliknąć nowo pobrany plik v2.1.
+      </div>
+
+      <!-- Instrukcja instalacji -->
+      <div class="steps-box">
+        <div class="steps-title">Jak zainstalować aplikację:</div>
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div>Kliknij zielony przycisk <b>Pobierz SumaKamera v2.1 (APK)</b> powyżej.</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div>Otwórz powiadomienie o pobraniu lub przejdź do <b>Moje pliki &rarr; Pobrane</b>.</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div>Kliknij <b>Zainstaluj</b> (jeśli telefon zapyta o zgodę na instalację nieznanych aplikacji, kliknij <i>Zezwalaj</i>). Gotowe!</div>
+        </div>
+      </div>
+
+      <!-- KOD ŹRÓDŁOWY PROJEKTU -->
+      <div class="version-card v1" style="background: #0f172a; border: 1px solid #38bdf8; margin-top: 16px;">
+        <span class="version-tag" style="background: #0284c7; color: white;">Kod Źródłowy • Android Studio</span>
+        <h2 class="version-title">💻 Pełny kod projektu (.ZIP)</h2>
+        <p class="version-desc">Pobierz kompletne repozytorium (Kotlin, Jetpack Compose, CameraX, ML Kit OCR, strona WWW) gotowe do edycji i rozbudowy.</p>
+
+        <a href="/download/SumaKamera_pelny_kod_zrodlowy.zip" download="SumaKamera_pelny_kod_zrodlowy.zip" class="btn-download-secondary" style="background: #0284c7; color: white;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Pobierz kod źródłowy (.ZIP - 152 KB)
+        </a>
+      </div>
+    </div>
+
+    <!-- TAB 2: WEB SCANNER (ZERO INSTALL FOR IPHONE / XIAOMI) -->
+    <div id="tab-webscanner" class="tab-content">
+      <div class="scanner-box">
+        <div class="scanner-hero">
+          <div class="scanner-hero-icon">📱</div>
+          <div>
+            <div class="scanner-hero-title">Skaner w przeglądarce (Zero-Install)</div>
+            <div class="scanner-hero-desc">Działa na iPhone (Safari), Xiaomi i każdym smartfonie bez instalowania aplikacji!</div>
+          </div>
+        </div>
+
+        <div class="scanner-actions">
+          <label for="fileInput" class="btn-action camera-btn">
+            <span style="font-size: 20px;">📸</span>
+            <span>Zrób zdjęcie aparatem</span>
+          </label>
+          <input type="file" id="fileInput" accept="image/*" capture="environment" onchange="handleImageUpload(event)">
+
+          <button class="btn-action" onclick="toggleWebcam()">
+            <span style="font-size: 20px;">📹</span>
+            <span id="webcamBtnLabel">Kamera na żywo</span>
+          </button>
+        </div>
+
+        <!-- Live Video Element -->
+        <div class="video-container" id="videoBox">
+          <video id="webcam" autoplay playsinline></video>
+          <button class="video-overlay-btn" onclick="captureWebcamFrame()">📸 Zrób zdjęcie klatki</button>
+        </div>
+
+        <!-- Canvas Preview -->
+        <div class="preview-canvas-box" id="canvasBox">
+          <canvas id="previewCanvas"></canvas>
+        </div>
+
+        <!-- OCR Processing Status -->
+        <div class="ocr-status" id="ocrStatus">
+          ⏳ Rozpoznawanie tekstu i kwot na dokumencie...
+        </div>
+
+        <!-- Manual or quick add -->
+        <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+          <input type="text" id="manualInput" placeholder="Np. 750,5 zł lub wklej kwotę" style="flex: 1; background: #0f172a; border: 1px solid #334155; color: white; padding: 10px 12px; border-radius: 10px; font-size: 13px;">
+          <button onclick="addManualAmount()" style="background: #2563eb; color: white; border: none; padding: 0 16px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer;">Dodaj</button>
+        </div>
+
+        <!-- Detected items pills -->
+        <div class="detected-items-box">
+          <div class="items-title">
+            <span>WYKRYTE POZYCJE (KLIKNIJ ABY WŁĄCZYĆ/WYŁĄCZYĆ):</span>
+            <button onclick="clearAllItems()" style="background: none; border: none; color: #ef4444; font-size: 11px; cursor: pointer; font-weight: 600;">Wyczyść</button>
+          </div>
+          <div class="pills-container" id="pillsContainer">
+            <!-- Dynamic pills inserted here -->
+          </div>
+        </div>
+
+        <!-- Calculator Display -->
+        <div class="calc-bar">
+          <div class="calc-top">
+            <div>
+              <div class="sum-label">SUMA ZAZNACZONYCH POZYCJI:</div>
+              <div class="sum-val" id="webTotalSumDisplay">0,00 zł</div>
+            </div>
+          </div>
+
+          <div class="nine-percent-box" onclick="copyNinePercent()">
+            <div>
+              <div class="nine-label">9% SKŁADKA ZDROWOTNA:</div>
+              <div class="nine-val" id="webNinePercentDisplay">0,00 zł</div>
+            </div>
+            <div class="btn-copy">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              Kopiuj 9%
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Skopiowano do schowka!</div>
+
+  <script>
+    // Tab switching
+    function switchTab(tab) {
+      document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      if (tab === 'download') {
+        document.querySelectorAll('.nav-tab')[0].classList.add('active');
+        document.getElementById('tab-download').classList.add('active');
+        stopWebcam();
+      } else {
+        document.querySelectorAll('.nav-tab')[1].classList.add('active');
+        document.getElementById('tab-webscanner').classList.add('active');
+      }
+    }
+
+    // Web scanner state
+    let detectedList = [
+      { val: 1018.48, active: true, raw: "1 018,48 zł" },
+      { val: 750.50, active: true, raw: "750,5 zł (nowość v2.1)" },
+      { val: 419.46, active: true, raw: "419,46 zł" }
+    ];
+
+    function renderPills() {
+      const container = document.getElementById('pillsContainer');
+      container.innerHTML = '';
+      if (detectedList.length === 0) {
+        container.innerHTML = '<span style="font-size: 12px; color: #64748b; padding: 6px 0;">Brak kwot. Zrób zdjęcie dokumentu lub dodaj ręcznie powyżej.</span>';
+      } else {
+        detectedList.forEach((item, index) => {
+          const btn = document.createElement('button');
+          btn.className = 'ocr-pill ' + (item.active ? 'active' : 'inactive');
+          btn.innerText = (item.active ? '✓ ' : '✗ ') + item.raw;
+          btn.onclick = () => togglePill(index);
+          container.appendChild(btn);
+        });
+      }
+      updateWebTotals();
+    }
+
+    function togglePill(index) {
+      detectedList[index].active = !detectedList[index].active;
+      renderPills();
+    }
+
+    function clearAllItems() {
+      detectedList = [];
+      renderPills();
+    }
+
+    function updateWebTotals() {
+      const sum = detectedList.filter(i => i.active).reduce((acc, curr) => acc + curr.val, 0);
+      const nine = (sum * 0.09);
+      document.getElementById('webTotalSumDisplay').innerText = formatPln(sum);
+      document.getElementById('webNinePercentDisplay').innerText = formatPln(nine);
+    }
+
+    function formatPln(num) {
+      return num.toLocaleString('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' zł';
+    }
+
+    function copyNinePercent() {
+      const text = document.getElementById('webNinePercentDisplay').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        showToast("Skopiowano 9% Zdrowotną: " + text);
+      }).catch(() => {
+        showToast("Skopiowano: " + text);
+      });
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.innerText = msg;
+      t.style.display = 'block';
+      setTimeout(() => { t.style.display = 'none'; }, 2500);
+    }
+
+    function addManualAmount() {
+      const input = document.getElementById('manualInput');
+      const text = input.value.trim();
+      if (!text) return;
+      parseAndAddAmounts(text);
+      input.value = '';
+    }
+
+    // Polish regex supporting 1 and 2 decimals (v2.1 logic)
+    const AMOUNT_REGEX = /(?<![\w.,-])(\d{1,3}(?:[ \t.]\d{3})*(?:[,\.]\d{1,2})(?:\s*(?:zł|zl|pln|złotych|zlotych))?|\d+(?:[,\.]\d{1,2})(?:\s*(?:zł|zl|pln|złotych|zlotych))?|\d{1,6}(?:\s*(?:zł|zl|pln|złotych|zlotych)))(?![\w.,-])/gi;
+
+    function parseAndAddAmounts(text) {
+      const matches = text.match(AMOUNT_REGEX);
+      let added = 0;
+      if (matches) {
+        matches.forEach(m => {
+          let clean = m.replace(/(złotych|zlotych|złote|zlote|zł|zl|pln|\s)/gi, '').trim();
+          if (clean.includes(',') && clean.includes('.')) {
+            clean = clean.lastIndexOf(',') > clean.lastIndexOf('.') ? clean.replace(/\./g, '').replace(',', '.') : clean.replace(/,/g, '');
+          } else if (clean.includes(',')) {
+            clean = clean.replace(',', '.');
+          }
+          const val = parseFloat(clean);
+          if (!isNaN(val) && val > 0.05 && val < 100000000) {
+            // Guard: 1-decimal numbers without currency must be >= 10.0
+            const hasCurrency = /(zł|zl|pln|zlot)/i.test(m);
+            const hasTwoDecimals = /[,\.]\d{2}/.test(m);
+            if (!hasTwoDecimals && !hasCurrency && val < 10.0) return;
+
+            detectedList.push({ val: val, active: true, raw: m });
+            added++;
+          }
+        });
+      }
+      renderPills();
+      return added;
+    }
+
+    // Camera and Image Handling
+    function handleImageUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.getElementById('previewCanvas');
+          const ctx = canvas.getContext('2d');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx.drawImage(img, 0, 0);
+          document.getElementById('canvasBox').style.display = 'block';
+
+          runOcrOnCanvas(canvas);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Live Webcam
+    let stream = null;
+    function toggleWebcam() {
+      const videoBox = document.getElementById('videoBox');
+      const webcam = document.getElementById('webcam');
+      const label = document.getElementById('webcamBtnLabel');
+
+      if (stream) {
+        stopWebcam();
+        return;
+      }
+
+      navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: "environment" } }
+      }).then(s => {
+        stream = s;
+        webcam.srcObject = stream;
+        videoBox.style.display = 'block';
+        label.innerText = 'Wyłącz kamerę';
+      }).catch(err => {
+        alert("Nie można uzyskać dostępu do kamery: " + err.message);
+      });
+    }
+
+    function stopWebcam() {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+      }
+      const videoBox = document.getElementById('videoBox');
+      if (videoBox) videoBox.style.display = 'none';
+      const label = document.getElementById('webcamBtnLabel');
+      if (label) label.innerText = 'Kamera na żywo';
+    }
+
+    function captureWebcamFrame() {
+      const webcam = document.getElementById('webcam');
+      const canvas = document.getElementById('previewCanvas');
+      canvas.width = webcam.videoWidth;
+      canvas.height = webcam.videoHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(webcam, 0, 0);
+      document.getElementById('canvasBox').style.display = 'block';
+      stopWebcam();
+
+      runOcrOnCanvas(canvas);
+    }
+
+    async function runOcrOnCanvas(canvas) {
+      const status = document.getElementById('ocrStatus');
+      status.style.display = 'block';
+      status.innerText = '⏳ Rozpoznawanie kwot na dokumencie (Tesseract OCR)...';
+
+      try {
+        if (typeof Tesseract !== 'undefined') {
+          const result = await Tesseract.recognize(canvas, 'pol', {
+            logger: m => {
+              if (m.status === 'recognizing text') {
+                status.innerText = `⏳ Rozpoznawanie: ${Math.round(m.progress * 100)}%`;
+              }
+            }
+          });
+          const text = result.data.text;
+          const count = parseAndAddAmounts(text);
+          status.innerText = `✅ Odczytano pomyślnie! Wykryto ${count} nowych pozycji.`;
+          setTimeout(() => { status.style.display = 'none'; }, 3500);
+        } else {
+          status.innerText = '⚠️ Moduł OCR niedostępny offline. Wpisz kwotę ręcznie.';
+        }
+      } catch (err) {
+        status.innerText = '⚠️ Błąd OCR: ' + err.message;
+      }
+    }
+
+    // Initial render
+    renderPills();
+  </script>
+</body>
+</html>

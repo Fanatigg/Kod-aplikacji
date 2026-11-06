@@ -1,0 +1,6 @@
+{
+  "name": "SumaKamera",
+  "description": "Aplikacja do skanowania i sumowania kwot na żywo z kamery z możliwością zamrożenia kadru i zaznaczania kwot.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

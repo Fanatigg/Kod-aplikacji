@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Camera Body -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M34,36 L41,36 L44,31 L64,31 L67,36 L74,36 C78.4,36 82,39.6 82,44 L82,73 C82,77.4 78.4,81 74,81 L34,81 C29.6,81 26,77.4 26,73 L26,44 C26,39.6 29.6,36 34,36 Z" />
+
+    <!-- Inner Viewfinder Screen / Dark Cutout -->
+    <path
+        android:fillColor="#1E293B"
+        android:pathData="M32,42 H76 V75 H32 Z" />
+
+    <!-- Focus Crosshair Corners -->
+    <path
+        android:strokeColor="#38BDF8"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:pathData="M37,49 V46 H41 M67,46 H71 V49 M37,68 V71 H41 M67,71 H71 V68" />
+
+    <!-- Prominent Bold Math / Sum Badge: Sigma Σ and Plus + -->
+    <path
+        android:fillColor="#38BDF8"
+        android:pathData="M44,51 H54 L48.5,58.5 L54,66 H44 V63.5 H50 L46,58.5 L50,53.5 H44 Z" />
+
+    <!-- Plus Symbol -->
+    <path
+        android:fillColor="#22C55E"
+        android:pathData="M61,54 H63 V57 H66 V59 H63 V62 H61 V59 H58 V57 H61 Z" />
+
+    <!-- Top Camera Accent / Flash -->
+    <path
+        android:fillColor="#FBBF24"
+        android:pathData="M73,38 A2.5,2.5 0 1,1 73,38.01 Z" />
+</vector>

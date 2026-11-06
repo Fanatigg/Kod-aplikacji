@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SumaKamera - Pobierz aplikację i Przetestuj</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      background: #0b132b;
+      color: #f1f5f9;
+      padding: 16px;
+      line-height: 1.5;
+    }
+    .container {
+      max-width: 520px;
+      margin: 0 auto;
+    }
+    .header {
+      text-align: center;
+      padding: 20px 0 14px;
+    }
+    .logo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #1e3a8a;
+      color: #93c5fd;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    h1 {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+    .subtitle {
+      font-size: 14px;
+      color: #94a3b8;
+    }
+
+    /* Download Card */
+    .download-card {
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border: 2px solid #10b981;
+      border-radius: 20px;
+      padding: 20px;
+      text-align: center;
+      margin: 16px 0;
+      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2);
+    }
+    .btn-download-zip {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: #10b981;
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 17px;
+      padding: 16px 20px;
+      border-radius: 14px;
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+      transition: transform 0.1s, background 0.2s;
+    }
+    .btn-download-zip:active {
+      transform: scale(0.98);
+      background: #059669;
+    }
+    .btn-download-apk {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 13px;
+      color: #93c5fd;
+      text-decoration: underline;
+    }
+    .apk-info {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: 10px;
+    }
+
+    /* Steps */
+    .steps-box {
+      background: #1e293b;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 24px;
+      font-size: 13px;
+    }
+    .steps-title {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 10px;
+      color: #38bdf8;
+    }
+    .step-item {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .step-num {
+      background: #334155;
+      color: #e2e8f0;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+
+    /* Interactive Simulator */
+    .demo-section {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 20px;
+      padding: 18px;
+    }
+    .demo-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .demo-tag {
+      background: #065f46;
+      color: #6ee7b7;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+    .doc-preview {
+      background: #ffffff;
+      color: #0f172a;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+    .doc-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: #475569;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 6px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    .doc-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 6px;
+      border-radius: 8px;
+      margin-bottom: 4px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s;
+    }
+    .doc-row:hover, .doc-row:active {
+      background: #f1f5f9;
+    }
+    .doc-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1e293b;
+    }
+    .amount-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+    .amount-pill.selected {
+      background: #10b981;
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+    }
+    .amount-pill.unselected {
+      background: #e2e8f0;
+      color: #94a3b8;
+      text-decoration: line-through;
+    }
+
+    /* Calculator Bar */
+    .calc-bar {
+      background: #1e293b;
+      border-radius: 16px;
+      padding: 14px;
+      border: 1px solid #38bdf8;
+    }
+    .calc-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .sum-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #94a3b8;
+      letter-spacing: 0.5px;
+    }
+    .sum-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 24px;
+      font-weight: 800;
+      color: #34d399;
+    }
+    .nine-percent-box {
+      margin-top: 10px;
+      padding: 10px 12px;
+      background: #172554;
+      border: 1px solid #3b82f6;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .nine-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #93c5fd;
+    }
+    .nine-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 18px;
+      font-weight: 800;
+      color: #60a5fa;
+    }
+    .copy-toast {
+      display: none;
+      text-align: center;
+      font-size: 12px;
+      color: #34d399;
+      margin-top: 6px;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo-badge">📸 SumaKamera v1.0</div>
+      <h1>Licznik Składek ZUS & Kwot</h1>
+      <p class="subtitle">Sumowanie kwot na żywo z kamery + wyliczenie 9% zdrowotnej</p>
+    </div>
+
+    <!-- Direct Download -->
+    <div class="download-card">
+      <a href="/SumaKamera.zip" download="SumaKamera.zip" class="btn-download-zip" id="downloadZipBtn">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        Pobierz SumaKamera (tylko 10 MB)
+      </a>
+      <p class="apk-info">Skompresowana paczka instalacyjna ZIP z plikiem APK</p>
+      <div>
+        <a href="/SumaKamera.apk" download="SumaKamera.apk" class="btn-download-apk">Lub pobierz bezpośrednio plik APK (32 MB)</a>
+      </div>
+    </div>
+
+    <!-- Quick install steps -->
+    <div class="steps-box">
+      <div class="steps-title">Jak zainstalować w 1 minutę:</div>
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div>Kliknij zielony przycisk <b>Pobierz SumaKamera</b> powyżej (pobierze się w 2 sekundy).</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div>Otwórz pobrany plik w telefonie (aplikacja <i>Pliki / Moje pliki</i> na telefonie otworzy go od razu).</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div>Kliknij <b>SumaKamera.apk</b> wewnątrz i wybierz <b>Zainstaluj</b>. Gotowe!</div>
+      </div>
+    </div>
+
+    <!-- Interactive Simulator -->
+    <div class="demo-section">
+      <div class="demo-header">
+        <span style="font-weight: 700; font-size: 14px;">Interaktywny podgląd działania:</span>
+        <span class="demo-tag">SYMULATOR ZUS</span>
+      </div>
+      <p style="font-size: 12px; color: #94a3b8; margin-bottom: 12px;">
+        Klikaj palcem poszczególne kwoty poniżej, aby zobaczyć jak działa zaznaczanie i przelicznik 9%:
+      </p>
+
+      <div class="doc-preview">
+        <div class="doc-title">ZUS DRA - Deklaracja Rozliczeniowa</div>
+        <div class="doc-row" onclick="toggleItem(0)">
+          <span class="doc-label">1. Składka emerytalna</span>
+          <span class="amount-pill selected" id="pill-0">✓ 1 018,48 zł</span>
+        </div>
+        <div class="doc-row" onclick="toggleItem(1)">
+          <span class="doc-label">2. Składka rentowa</span>
+          <span class="amount-pill selected" id="pill-1">✓ 417,41 zł</span>
+        </div>
+        <div class="doc-row" onclick="toggleItem(2)">
+          <span class="doc-label">3. Składka chorobowa</span>
+          <span class="amount-pill selected" id="pill-2">✓ 127,88 zł</span>
+        </div>
+        <div class="doc-row" onclick="toggleItem(3)">
+          <span class="doc-label">4. Składka wypadkowa</span>
+          <span class="amount-pill selected" id="pill-3">✓ 87,13 zł</span>
+        </div>
+        <div class="doc-row" onclick="toggleItem(4)">
+          <span class="doc-label">5. Składka zdrowotna</span>
+          <span class="amount-pill selected" id="pill-4">✓ 419,46 zł</span>
+        </div>
+        <div class="doc-row" onclick="toggleItem(5)">
+          <span class="doc-label">6. Fundusz Pracy (FP)</span>
+          <span class="amount-pill selected" id="pill-5">✓ 127,88 zł</span>
+        </div>
+      </div>
+
+      <!-- Live sum box -->
+      <div class="calc-bar">
+        <div class="calc-top">
+          <div>
+            <div class="sum-label">ŁĄCZNA SUMA ZAZNACZONYCH:</div>
+            <div class="sum-val" id="totalSumDisplay">2 198,24 zł</div>
+          </div>
+          <button onclick="copySum()" style="background: #334155; color: #ffffff; border: none; padding: 8px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer;">
+            📋 Kopiuj
+          </button>
+        </div>
+
+        <div class="nine-percent-box">
+          <div>
+            <div class="nine-label">9% Z SUMY (SKŁADKA ZDROWOTNA):</div>
+            <div class="nine-val" id="ninePercentDisplay">197,84 zł</div>
+          </div>
+          <button onclick="copyNine()" style="background: #1e3a8a; color: #93c5fd; border: none; padding: 6px 10px; border-radius: 6px; font-weight: 700; font-size: 11px; cursor: pointer;">
+            Kopiuj 9%
+          </button>
+        </div>
+        <div class="copy-toast" id="copyToast">Skopiowano do schowka!</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const items = [
+      { val: 1018.48, selected: true, text: "1 018,48 zł" },
+      { val: 417.41, selected: true, text: "417,41 zł" },
+      { val: 127.88, selected: true, text: "127,88 zł" },
+      { val: 87.13, selected: true, text: "87,13 zł" },
+      { val: 419.46, selected: true, text: "419,46 zł" },
+      { val: 127.88, selected: true, text: "127,88 zł" }
+    ];
+
+    function updateCalculations() {
+      const sum = items.filter(i => i.selected).reduce((acc, curr) => acc + curr.val, 0);
+      const nine = (sum * 0.09);
+
+      document.getElementById('totalSumDisplay').innerText = formatPln(sum);
+      document.getElementById('ninePercentDisplay').innerText = formatPln(nine);
+    }
+
+    function formatPln(num) {
+      return num.toLocaleString('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' zł';
+    }
+
+    function toggleItem(index) {
+      items[index].selected = !items[index].selected;
+      const pill = document.getElementById('pill-' + index);
+      if (items[index].selected) {
+        pill.className = 'amount-pill selected';
+        pill.innerText = '✓ ' + items[index].text;
+      } else {
+        pill.className = 'amount-pill unselected';
+        pill.innerText = '✗ ' + items[index].text;
+      }
+      updateCalculations();
+    }
+
+    function copySum() {
+      navigator.clipboard.writeText(document.getElementById('totalSumDisplay').innerText);
+      showToast();
+    }
+    function copyNine() {
+      navigator.clipboard.writeText(document.getElementById('ninePercentDisplay').innerText);
+      showToast();
+    }
+    function showToast() {
+      const t = document.getElementById('copyToast');
+      t.style.display = 'block';
+      setTimeout(() => { t.style.display = 'none'; }, 2000);
+    }
+  </script>
+</body>
+</html>

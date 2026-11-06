@@ -1,0 +1,6 @@
+{
+  "summary":  "Plan wdrożenia wersji 2.1 oraz webowego skanera w przeglądarce:\n1. Rozszerzenie parsera kwot o liczby z jednym miejscem po przecinku (np. 750,5 zł / 750.5 PLN) z zabezpieczeniem przed wersjami i procentami.\n2. Adaptacyjny układ poziomy (Landscape) - boczny dock sterowania i sumy zwalniający podgląd kamery.\n3. Webowy skaner w przeglądarce (HTML5 Camera + OCR) na stronie pobierania dla iPhone i Xiaomi bez konieczności instalacji APK.\n4. Wydanie pakietu v2.1 oraz zaktualizowanie portalu download.",
+  "updatedAt":  "2026-10-30T08:57:32.023259012Z",
+  "requestFeedback":  true,
+  "userFacing":  true
+}
